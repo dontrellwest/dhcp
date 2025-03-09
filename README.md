@@ -44,5 +44,7 @@ Objective: Explain how DHCP (Dynamic Host Configuration Protocol) assigns IP add
 <br>
 •	In Wireshark: Filtering for dhcp (or bootp, since DHCP is based on BOOTP) allows you to see devices requesting and receiving IP addresses, which is useful for troubleshooting network connectivity issues.
 <br>
-<img width="764" alt="Step 6a- DHCP" src="https://github.com/user-attachments/assets/c0eb6caf-6bd4-4a0a-9db7-ded146c36ec9" />
-<img width="764" alt="Step 6b- DHCP" src="https://github.com/user-attachments/assets/cbe319b1-6f4d-43a8-8e04-d6c4bb58e49e" />
+<img width="764" alt="Step 6a- DHCP" src="https://github.com/user-attachments/assets/c3d0e483-a171-4183-9166-26c54165152f" />
+<img width="764" alt="Step 6b- DHCP" src="https://github.com/user-attachments/assets/6310ce3c-8677-4f3d-abe4-02cac6f9da0b" />
+<img width="1512" alt="Step 6c- DHCP" src="https://github.com/user-attachments/assets/15cf2ca9-a02c-4b3e-904c-ed7edd9a3584" />
+
