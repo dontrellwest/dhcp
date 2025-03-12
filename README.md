@@ -1,11 +1,12 @@
 <h1>Capturing DHCP Requests and Responses in Wireshark on Azure VMs</h1>
 <h2>Objective</h2>
-•	In this section, you will capture and analyze DHCP (Dynamic Host Configuration Protocol) traffic between your Windows 10 VM and the Azure network.  <br>
-•	You will manually trigger the process of releasing and renewing your VM’s IP address, then observe how DHCP traffic appears in Wireshark.
+
+ - In this section, you will capture and analyze DHCP (Dynamic Host Configuration Protocol) traffic between your Windows 10 VM and the Azure network. 
+ - You will manually trigger the process of releasing and renewing your VM’s IP address, then observe how DHCP traffic appears in Wireshark.
 
 <h2>Environments and Technologies Used</h2>
 
-- Microsoft Azure (Virtual Machines/Compute)
+- Microsoft Azure (Virtual Machines/Computers)
 - Remote Desktop
 - Powershell
 - Batch Script Creation
@@ -21,50 +22,52 @@
 
 <h2>What is DHCP (Dynamic Host Configuration Protocol)?</h2>
 
-DHCP stands for Dynamic Host Configuration Protocol. It’s a network management protocol used to automatically assign IP addresses and other network settings (like the default gateway and DNS servers) to devices on a network. <br>
+DHCP stands for Dynamic Host Configuration Protocol. It’s a network management protocol used to automatically assign IP addresses and other network settings (like the default gateway and DNS servers) to devices on a network. 
 
 Without DHCP, every device (like your VM) would need to be manually configured with an IP address and network settings — which is time-consuming and prone to errors. DHCP automates this process, ensuring that devices can join the network and communicate with each other without manual intervention.
 
-<br>
-•	The DHCP process involves four steps: <br>
+•	The DHCP process involves four steps:
   - 1.	Discover – The client broadcasts a request for an IP address.  
   - 2.	Offer – The DHCP server responds with an available IP.  
   - 3.	Request – The client requests to use the offered IP.  
   - 4.	Acknowledge – The server confirms and leases the IP to the client.  
-<br>
-•	Port Numbers:
-<br>
-  •	67 (UDP) – Used by the DHCP server.
-<br>
-  •	68 (UDP) – Used by the DHCP client.
-<br>
-<br>
-•	In Wireshark: Filtering for dhcp (or bootp, since DHCP is based on BOOTP) allows you to see devices requesting and receiving IP addresses, which is useful for troubleshooting network connectivity issues.
+
+Port Numbers:
+
+ - 67 (UDP) – Used by the DHCP server.
+ - 68 (UDP) – Used by the DHCP client.
+
+In Wireshark: Filtering for dhcp (or bootp, since DHCP is based on BOOTP) allows you to see devices requesting and receiving IP addresses, which is useful for troubleshooting network connectivity issues.
 <br>
 
 <h2>Actions and Observations</h2>
-
-<br>
-
 <h3>Step 1 - Filter for DHCP Traffic in Wireshark</h3>
-	•	Open Wireshark and start a new packet capture. <br>
-	•	In the Wireshark filter bar, type: dhcp <br>
- 	•	This will isolate DHCP-related traffic, making it easier to spot DHCP requests and responses during the exercise. <br>
+
+ - [ ] Open Wireshark and start a new packet capture.
+ - [ ] In the Wireshark filter bar, type: dhcp 
+	 - This will isolate DHCP-related traffic, making it easier to spot DHCP requests and responses during the exercise.
+
+
   
 <h3>Step 2 - Create a DHCP Batch File</h3>
-To simplify the process of releasing and renewing the IP address, you will create a batch script: <br>
-	•	Open Notepad (or any text editor). <br>
-	•	Type the following commands: <br>
-        - ipconfig /release <br>
-        - ipconfig /renew <br>
-•	ipconfig /release – Releases the current IP address, effectively telling the DHCP server that you no longer need it. <br>
-	•	ipconfig /renew – Requests a new IP address from the DHCP server. <br>
+To simplify the process of releasing and renewing the IP address, you will create a batch script:
 
-  •	Save the file as dhcp.bat: <br>
-	    •	In Notepad, choose File > Save As <br>
-	    •	Navigate to the folder: C:\ProgramData <br>
- •	In the “Save as type” dropdown, select “All files”. <br>
- •	Save the file as dhcp.bat (not .txt). <br>
+ - [ ] Open Notepad (or any text editor).
+ - [ ] Type the following commands: 
+	
+		•	ipconfig /release
+		•	ipconfig /renew 
+
+			**Explanation**
+			•	ipconfig /release – Releases the current IP address, effectively telling the DHCP 
+				server that you no longer need it. 
+			•	ipconfig /renew – Requests a new IP address from the DHCP server. 
+
+ - [ ] Save the file as dhcp.bat: 
+	 - [ ] In Notepad, choose File > Save As 
+	 - [ ] Navigate to the folder: C:\ProgramData 
+	 - [ ] In the “Save as type” dropdown, select “All files”
+	 - [ ] Save the file as dhcp.bat (not .txt)
 
 <img width="764" alt="Step 6a- DHCP" src="https://github.com/user-attachments/assets/c3d0e483-a171-4183-9166-26c54165152f" />
 <img width="764" alt="Step 6b- DHCP" src="https://github.com/user-attachments/assets/6310ce3c-8677-4f3d-abe4-02cac6f9da0b" />
