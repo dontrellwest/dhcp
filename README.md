@@ -1,13 +1,16 @@
 <h1>Capturing DHCP Requests and Responses in Wireshark on Azure VMs</h1>
-Objective: Explain how DHCP (Dynamic Host Configuration Protocol) assigns IP addresses to Azure VMs, capture DHCP request/response traffic in Wireshark, and analyze how VMs obtain their network configurations dynamically.
+<h2>Objective</h2>
+•	In this section, you will capture and analyze DHCP (Dynamic Host Configuration Protocol) traffic between your Windows 10 VM and the Azure network.  <br>
+•	You will manually trigger the process of releasing and renewing your VM’s IP address, then observe how DHCP traffic appears in Wireshark.
 
 <h2>Environments and Technologies Used</h2>
 
 - Microsoft Azure (Virtual Machines/Compute)
 - Remote Desktop
 - Powershell
-- Various Command-Line Tools
-- Network Protocol ICMP
+- Batch Script Creation
+- Command-Line Tools
+- Network Protocol DHCP
 - Wireshark (Protocol Analyzer)
 
 <h2>Operating Systems Used </h2>
@@ -16,24 +19,18 @@ Objective: Explain how DHCP (Dynamic Host Configuration Protocol) assigns IP add
 - Ubuntu Server 22.04
 
 
-<h2>Actions and Observations</h2>
+<h2>What is DHCP (Dynamic Host Configuration Protocol)?</h2>
+
+DHCP stands for Dynamic Host Configuration Protocol. It’s a network management protocol used to automatically assign IP addresses and other network settings (like the default gateway and DNS servers) to devices on a network. <br>
+
+Without DHCP, every device (like your VM) would need to be manually configured with an IP address and network settings — which is time-consuming and prone to errors. DHCP automates this process, ensuring that devices can join the network and communicate with each other without manual intervention.
 
 <br>
-
-<h3>Step 1 - DHCP (Dynamic Host Configuration Protocol)</h3>
-•	DHCP is responsible for automatically assigning IP addresses to devices when they join a network. This prevents IP conflicts and ensures devices can communicate without manual configuration.
-<br>
-<br>
-•	The DHCP process involves four steps:
-<br>
-  1.	Discover – The client broadcasts a request for an IP address.
-<br>
-  2.	Offer – The DHCP server responds with an available IP.
-<br>
-  3.	Request – The client requests to use the offered IP.
-<br>
-  4.	Acknowledge – The server confirms and leases the IP to the client.
-<br>
+•	The DHCP process involves four steps: <br>
+  - 1.	Discover – The client broadcasts a request for an IP address.  
+  - 2.	Offer – The DHCP server responds with an available IP.  
+  - 3.	Request – The client requests to use the offered IP.  
+  - 4.	Acknowledge – The server confirms and leases the IP to the client.  
 <br>
 •	Port Numbers:
 <br>
@@ -44,7 +41,85 @@ Objective: Explain how DHCP (Dynamic Host Configuration Protocol) assigns IP add
 <br>
 •	In Wireshark: Filtering for dhcp (or bootp, since DHCP is based on BOOTP) allows you to see devices requesting and receiving IP addresses, which is useful for troubleshooting network connectivity issues.
 <br>
+
+<h2>Actions and Observations</h2>
+
+<br>
+
+<h3>Step 1 - Filter for DHCP Traffic in Wireshark</h3>
+	•	Open Wireshark and start a new packet capture. <br>
+	•	In the Wireshark filter bar, type: dhcp <br>
+ 	•	This will isolate DHCP-related traffic, making it easier to spot DHCP requests and responses during the exercise. <br>
+  
+<h3>Step 2 - Create a DHCP Batch File</h3>
+To simplify the process of releasing and renewing the IP address, you will create a batch script: <br>
+	•	Open Notepad (or any text editor). <br>
+	•	Type the following commands: <br>
+        - ipconfig /release <br>
+        - ipconfig /renew <br>
+•	ipconfig /release – Releases the current IP address, effectively telling the DHCP server that you no longer need it. <br>
+	•	ipconfig /renew – Requests a new IP address from the DHCP server. <br>
+
+  •	Save the file as dhcp.bat: <br>
+	    •	In Notepad, choose File > Save As <br>
+	    •	Navigate to the folder: C:\ProgramData <br>
+ •	In the “Save as type” dropdown, select “All files”. <br>
+ •	Save the file as dhcp.bat (not .txt). <br>
+
 <img width="764" alt="Step 6a- DHCP" src="https://github.com/user-attachments/assets/c3d0e483-a171-4183-9166-26c54165152f" />
 <img width="764" alt="Step 6b- DHCP" src="https://github.com/user-attachments/assets/6310ce3c-8677-4f3d-abe4-02cac6f9da0b" />
-<img width="1512" alt="Step 6c- DHCP" src="https://github.com/user-attachments/assets/15cf2ca9-a02c-4b3e-904c-ed7edd9a3584" />
+
+<h3>Step 3 - Execute the Batch File to Request a New IP Address</h3>
+Now you will trigger the DHCP process manually: <br>
+	1.	Open PowerShell as an administrator. <br>
+	2.	Change to the ProgramData directory by typing: cd c:/programdata <br>
+	3.	Verify the script is in place by listing the files: ls <br>
+  4.	Run the script to release and renew the IP address: .\dhcp.bat <br>
+	•	The release command will send a DHCPRELEASE packet to the DHCP server, informing it that the VM is giving up its IP address. <br>
+	•	The renew command will send a DHCPDISCOVER packet to search for available DHCP servers, and the server will respond with a new lease (IP address). <br>
+  
+  <img width="1512" alt="Step 6c- DHCP" src="https://github.com/user-attachments/assets/15cf2ca9-a02c-4b3e-904c-ed7edd9a3584" />
+
+<h3>Step 4 - Observe the DHCP Traffic in Wireshark</h3>
+
+  •	In Wireshark, you should see the following DHCP packet sequence: <br>
+	•	DHCPDISCOVER – The VM broadcasts a request for an available IP address. <br>
+	•	DHCPOFFER – The DHCP server offers an IP address. <br>
+	•	DHCPREQUEST – The VM requests the offered IP address. <br>
+	•	DHCPACK – The server confirms and assigns the IP address to the VM. <br>
+ <br>
+This completes the DHCP process and assigns the VM a new IP address.
+
+<h2>Explanation of What’s Happening</h2>
+<h3>DHCP Protocol Overview</h3>
+	•	DHCP allows a machine (like your VM) to automatically receive an IP address from a DHCP server. <br>
+	•	The process follows a DORA sequence: <br>
+	•	D – Discover – Client broadcasts to find DHCP servers. <br>
+	•	O – Offer – Server offers an available IP address. <br>
+	•	R – Request – Client requests the offered IP address. <br>
+	•	A – Acknowledge – Server assigns the IP address and confirms the lease. <br>
+
+<h3>What You’re Doing in This Exercise</h3>
+	•	ipconfig /release – Simulates the VM giving up its IP address. <br>
+	•	ipconfig /renew – Simulates the VM asking for a new IP address. <br>
+	•	Wireshark allows you to observe the entire DORA process in action, which helps visualize how DHCP works at the packet level. <br>
+
+
+<h2>Summary & Significance</h2>
+
+<h3>What You Did</h3>
+	•	Created a batch script to automate the release and renew DHCP commands. <br>
+	•	Used PowerShell to execute the script and trigger DHCP traffic. <br>
+	•	Captured and analyzed DHCP traffic in Wireshark, including the DORA sequence. <br>
+	•	Verified the DHCP assignment through PowerShell output and Wireshark logs. <br>
+
+<h3>Why This Matters</h3>
+	•	DHCP is critical for network automation – it reduces the need for manual IP address assignment and ensures consistent network configuration. <br>
+	•	Understanding DHCP traffic helps with troubleshooting IP conflicts, connectivity issues, and network misconfigurations. <br>
+	•	Wireshark packet analysis allows you to confirm that the DHCP process is functioning correctly and helps identify if there are problems with DHCP server availability or configuration. <br>
+	•	By automating the process with a batch file, you gain insight into how to work more efficiently with DHCP in a real-world scenario. <br>
+ <br>
+By completing this tutorial, you’ve gained practical experience with managing DHCP in Azure, automating network configuration, and capturing DHCP traffic with Wireshark. 
+
+
 
