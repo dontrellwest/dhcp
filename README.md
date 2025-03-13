@@ -115,12 +115,9 @@ Now you will trigger the DHCP process manually:
 
 <h3>Why This Matters</h3>
 
- - [ ] DHCP is critical for network automation – it reduces the need for manual IP address assignment and ensures consistent network configuration.
- - [ ] Understanding DHCP traffic helps with troubleshooting IP conflicts, connectivity issues, and network misconfigurations.
- - [ ] Wireshark packet analysis allows you to confirm that the DHCP process is functioning correctly and helps identify if there are problems with DHCP server availability or configuration.
- - [ ] By automating the process with a batch file, you gain insight into how to work more efficiently with DHCP in a real-world scenario.
-	
+ - DHCP is critical for network automation – it reduces the need for manual IP address assignment and ensures consistent network configuration.
+ - Understanding DHCP traffic helps with troubleshooting IP conflicts, connectivity issues, and network misconfigurations.
+ - Wireshark packet analysis allows you to confirm that the DHCP process is functioning correctly and helps identify if there are problems with DHCP server availability or configuration.
+ - By automating the process with a batch file, you gain insight into how to work more efficiently with DHCP in a real-world scenario.
+
 By completing this tutorial, you’ve gained practical experience with managing DHCP in Azure, automating network configuration, and capturing DHCP traffic with Wireshark. 
-
-
-
